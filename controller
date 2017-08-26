@@ -1,0 +1,193 @@
+import React from 'react';
+import style from './style.scss';
+import moment from 'moment';
+import CybsDateRangePickerTemplate from './template';
+
+/**
+ * Component to select a date and time range
+ */
+
+CybsDaterangepicker.PropTypes = {
+  presets: React.PropTypes.arrayOf(React.PropTypes.shape({
+    "label": React.PropTypes.string,
+    "startDate": React.PropTypes.date,
+    "endDate": React.PropTypes.date,
+  })),
+  /**
+  * Moment-compatible timezone string.
+  */
+  timezone: React.PropTypes.string,
+  /**
+  * Minimum selectable date, moment-compatible date string.
+  */
+  maxDate: React.PropTypes.oneOf(['string','Object', 'func']).isRequired,
+  /**
+  * Minimum selectable date, moment-compatible date string.
+  */
+  minDate: React.PropTypes.oneOf(['string','Object']).isRequired,
+  /**
+  * Selected month.
+  */
+  selectedMonth: React.PropTypes.number,
+  /**
+  * Selected year.
+  */
+  selectedYear: React.PropTypes.number,
+  /**
+  * Translated strings.
+  */
+  i18n: React.PropTypes.arrayOf(React.PropTypes.shape({
+    key: React.PropTypes.string,
+    value: React.PropTypes.node,
+    /**
+    * Preset with the values displayed in the date range dropdown menus.
+    */
+    singleDate: React.PropTypes.string,
+    custom: React.PropTypes.string,
+    yesterday: React.PropTypes.string,
+    today: React.PropTypes.string,
+    lastSevenDays: React.PropTypes.string,
+    lastWeek: React.PropTypes.string,
+    lastSixMonth: React.PropTypes.string,
+    monthToDate: React.PropTypes.string,
+    /**
+    * Error message displayed below date text fields.
+    */
+    lastTwoYears: React.PropTypes.string,
+    futureDates: React.PropTypes.string,
+    greaterStartDate: React.PropTypes.string,
+    invalidDate: React.PropTypes.string,
+    /**
+    * Labels displayed in the cancel and apply buttons.
+    */
+    cancel: React.PropTypes.string.isRequired,
+    apply: React.PropTypes.string.isRequired,
+
+    /**
+    * Labels displayed in the component.
+    */
+    calendar: React.PropTypes.string,
+    time: React.PropTypes.string,
+    startDate: React.PropTypes.string,
+    endDate: React.PropTypes.string,
+    startTime: React.PropTypes.string,
+    endTime: React.PropTypes.string,
+    timeZones: React.PropTypes.string
+  })),
+
+    /**
+    * Show date range picker on load.
+    */
+    showDateRangepicker: React.PropTypes.bool,
+    /**
+    * Show date range dropdown with implemented canned range.
+    */
+    showDateRangeDropdown: React.PropTypes.bool,
+    /**
+    * Show calendar checkbox to display one or two calendar pickers depending on the canned range selection.
+    */
+    showCalendarCheckboxOnly: React.PropTypes.bool,
+    /**
+    * Show one or two calendar pickers depending on the canned range selection.
+    */
+    showCalendar:React.PropTypes.bool,
+    /**
+    * Show time checkbox to display one or two time picker components depending on the canned range selection.
+    */
+    showTimeCheckbox: React.PropTypes.bool,
+    /**
+    * Show one or two date text field components depending on the canned range selection.
+    */
+    showDateTextField: React.PropTypes.bool,
+    /**
+    * Show one or two time picker components depending on the canned range selection.
+    */
+    showTimePicker: React.PropTypes.bool,
+    /**
+    * Show month year picker component depending on implementation instead of date text fields components.
+    */
+    showMonthYearPicker: React.PropTypes.bool,
+    /**
+    * Show time zone component if time checkbox is checked
+    */
+    showTimeZonesDropdown: React.PropTypes.bool,
+    /**
+    * Show cancel and apply buttons.
+    */
+    showCancelApplyButtons: React.PropTypes.bool,
+    /**
+    * When clicking on apply, hide the date range picker.
+    */
+    hideOnApply: React.PropTypes.bool,
+    /**
+     * This is the point on the anchor where the popover's targetOrigin will attach to. Options: vertical: [top, middle, bottom]; horizontal: [left, center, right].
+     */
+    anchorOrigin: React.PropTypes.object,
+    /**
+     * This is the point on the popover which will attach to the anchor's origin. Options: vertical: [top, middle, bottom]; horizontal: [left, center, right].
+     */
+    targetOrigin: React.PropTypes.object,
+    /**
+     * Message displayed in the tooltip for time indication.
+     */
+    tooltipMessage: React.PropTypes.string,
+    /**
+    * String to determine 24hr vs 12h time based on user preferences.
+    */
+    timeSystem: React.PropTypes.string,
+    /**
+    * String to determine the frequency of the minute Dropdown.
+    */
+    minuteDeliminiter: React.PropTypes.number,
+
+    dateErrorText: React.PropTypes.shape({
+      'custom': React.PropTypes.array,
+      'general': React.PropTypes.array
+    })
+
+
+};
+
+CybsDaterangepicker.defaultProps = {
+    presets: [{
+          "label": 'Single Date',
+          "startDate": moment().startOf('day'),
+          "endDate": moment().endOf('day')
+      }, {
+          "label": 'Custom',
+          "startDate": moment().subtract(8, 'days').startOf('day'),
+          "endDate": moment().subtract(1, 'day').endOf('day')
+      }
+    ],
+    timezone: 'America/Denver - (GMT-07:00) Mountain Standard Time',
+    showDateRangeDropdown: true,
+    showDateRangepicker: false,
+    showCancelApplyButtons: true,
+    hideOnApply: true,
+    maxDate: moment().endOf("month").toDate(),
+    anchorOrigin: {
+      vertical: 'bottom',
+      horizontal: 'left'
+    },
+    targetOrigin: {
+      vertical: 'top',
+      horizontal: 'left'
+    },
+    tooltipMessage: '11:59 pm counts up until midnight of the following day.',
+    showCalendarCheckboxOnly: false,
+    timeSystem: '12system',
+    minuteDeliminiter: 5,
+
+};
+
+function CybsDaterangepicker (props) {
+    const templateProps = {
+         ...props,
+    };
+
+  return CybsDateRangePickerTemplate (templateProps, CybsDaterangepicker);
+};
+
+
+CybsDaterangepicker.displayName='CybsDaterangepicker';
+export default CybsDaterangepicker;

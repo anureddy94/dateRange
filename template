@@ -1,0 +1,180 @@
+import React from 'react';
+import {StructFlex, StructItem} from '@react-component/struct-flex';
+import {getMuiTheme, MuiThemeProvider} from 'material-ui/styles';
+import {cyan500, grey200, none} from 'material-ui/styles/colors';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import Checkbox from 'material-ui/Checkbox';
+import DateDisplay from 'material-ui/DatePicker/DateDisplay';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import Popover from 'material-ui/Popover';
+import Divider from 'material-ui/Divider';
+import CybsTimeZones from '@react-component/cybs-time-zones';
+import CybsDatepicker from '@react-component/cybs-datepicker';
+import CybsTimePicker from '@react-component/cybs-TimePicker';
+import Style from './style.scss';
+import moment from 'moment';
+
+    const styles = {
+    block: {
+    width: 700
+    },
+    checkbox: {
+    marginTop: 35
+    },
+    buttons:{
+    marginTop: 20,
+    marginBottom:5
+    },
+    applyButton:{
+    marginTop: 20,
+    color: '#0c70b4'
+    },
+    divider:{
+    marginTop:10
+    },
+    root:{
+    display:'none'
+    }
+    };
+
+
+// function findTimeComponent(children){
+//
+// }
+
+const CybsDateRangePicker = (props) => {
+
+//const TimerPicker = findTimeComponent(props.children);
+
+return (
+
+<StructFlex>
+  <StructItem>
+      <RaisedButton primary={true} onTouchTap={props.onOpenDatePickerClicked} label={props.selectedStartDate  + '—' + props.selectedEndDate} />
+  </StructItem>
+  <Popover
+    open={props.showDateRangepicker}
+    anchorEl={props.anchorEl}
+    useLayerForClickAway={true}
+    onRequestClose={props.onCloseDatePickerRequest}
+    anchorOrigin={props.anchorOrigin}
+    targetOrigin={props.targetOrigin}
+  >
+  {props.children}
+<StructFlex direction="column" justify-content="left" style={styles.block} className="date-range-picker-container">
+   <StructFlex direction="row" justify-content="space-between">
+      <StructItem>
+         <SelectField floatingLabelText="Date Range"
+            value={props.selectedDateRange}
+            onChange={props.onDateSelectionChange}>
+            {
+            props.presets.map((dateRangeSelection) => {
+            return (
+            <MenuItem
+               key={dateRangeSelection.label}
+               value={dateRangeSelection.label}
+               primaryText={dateRangeSelection.label}
+               />
+            );
+            })
+            }
+         </SelectField>
+      </StructItem>
+      <StructFlex direction="row" >
+         <StructItem>
+            <Checkbox label="Calendar" style={styles.checkbox} checked={props.showCalendar} onCheck={props.onCalendarChecked}/>
+         </StructItem>
+         {!props.showCalendarCheckboxOnly?
+         <StructItem>
+            <Checkbox label="Time" style={styles.checkbox} checked={props.timeChecked} onCheck={props.onTimeChecked}/>
+         </StructItem>
+         :null}
+      </StructFlex>
+   </StructFlex>
+   <Divider style={styles.divider}/>
+   <StructFlex direction="row" justify-content="space-between">
+      <StructItem>
+         <CybsDatepicker dateEntered={props.startDateValue}
+                        onDateTextFieldChanged={props.onStartDateChanged}
+                        dateLabel="Start Date"
+                        error={props.errorStartText}
+                        showCalendar={props.showCalendar}
+                        firstDayOfWeek={1}
+                        selectedDate={props.startDate}
+                        onCalendarDateSelected={props.onStartDateCalendarSelected}
+                        maxDate={props.maxDate}/>
+
+            {props.timeChecked?
+              <CybsTimePicker value={props.selectedTime}
+                              timeChanged={props.onStartTimeSelected}
+                              label="Start Time"
+                              minuteDeliminiter={props.minuteDeliminiter}
+                              timeSystem={props.timeSystem}/>
+
+                            //{React.cloneComponent(TimePicker)}
+            :null
+
+            }
+      </StructItem>
+      <StructItem>
+      {props.displayTwoDate &&
+
+          <CybsDatepicker dateEntered={props.endDateValue}
+                         onDateTextFieldChanged={props.onEndDateChanged}
+                         dateLabel="End Date"
+                         error={props.errorEndText}
+                         showCalendar={props.showCalendar}
+                         firstDayOfWeek={1}
+                         selectedDate={props.endDate = props.endDate > props.startDate? props.endDate : props.startDate}
+                         onCalendarDateSelected={props.onEndDateCalendarSelected}
+                         maxDate={props.maxDate}
+                         minDate={props.startDate.toDate()}/>
+
+         }
+         {props.timeChecked?
+           <StructFlex direction="row" >
+         <CybsTimePicker value={props.selectedEndTime}
+                         timeChanged={props.onEndTimeSelected}
+                         label="End Time"
+                         tooltipMessage={props.tooltipMessage}
+                         timeSystem={props.timeSystem}
+                         minuteDeliminiter={props.minuteDeliminiter}/>
+          </StructFlex>
+         :null
+         }
+
+      </StructItem>
+
+   </StructFlex>
+
+   {props.timeChecked &&
+   <StructItem>
+        {!props.showDateRangeDropdown?
+       <CybsTimeZones text={props.selectedTimeZone} onChange={props.timeZoneChanged} label="Time Zone"/>
+       : <div className="timezone-span"><span className="timezone-title">Timezone</span>: {props.timezone}</div>
+       }
+      <Divider style={styles.divider}/>
+    </StructItem>
+   }
+
+   <StructFlex direction="row-reverse">
+      <StructItem>
+         <FlatButton label="Cancel"
+                     style={styles.buttons}
+                     onTouchTap={props.onCloseDatePickerRequest} />
+         <RaisedButton label="Apply"
+                        primary={true}
+                        style={styles.applyButton}
+                        disabled={props.applyButtonDisabled}
+                        onTouchTap={props.onApplyButtonClicked} />
+      </StructItem>
+   </StructFlex>
+  </StructFlex>
+     </Popover>
+       </StructFlex>
+);
+};
+
+export default CybsDateRangePicker;

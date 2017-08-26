@@ -1,0 +1,28 @@
+import React from 'react';
+import {mount, render, shallow} from 'enzyme';
+import chaiEnzyme from 'chai-enzyme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+chai.use(chaiEnzyme());
+
+const {expect, assert} = chai;
+
+const mountComponentWithTheme = (component, props={}, children=null) => {
+
+  component.contextTypes = {
+    muiTheme: React.PropTypes.object,
+    ...component.contextTypes,
+  };
+
+  const element = React.createElement(component, props, children);
+
+  return mount(
+    element,
+    {context: {muiTheme: getMuiTheme()}}
+  );
+
+};
+
+export {mountComponentWithTheme, expect, assert};
